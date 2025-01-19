@@ -1,7 +1,6 @@
 import { useLayoutEffect, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useMask, useGLTF, useAnimations, Float, CameraControls } from '@react-three/drei'
-import { Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial } from '@react-three/drei'
+import { useMask, useGLTF, useAnimations, Float, CameraControls, Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial } from '@react-three/drei'
 
 
 export default function MyCanvas() {
@@ -43,7 +42,7 @@ function Aquarium({ children, ...props }) {
   useLayoutEffect(() => {
     // Apply stencil to all contents
     ref.current.traverse((child) => child.material && Object.assign(child.material, { ...stencil }))
-  }, [])
+  }, [stencil])
   return (
     <group {...props} dispose={null}>
       <mesh castShadow scale={[0.61 * 6, 0.55 * 6, 1 * 6]} geometry={nodes.Cube.geometry} >
@@ -73,7 +72,7 @@ function Tuna(props) {
   useEffect(() => {
     mixer.timeScale = 0.6
     actions['Swim'].play()
-  }, [])
+  }, [actions, mixer])
   useFrame((state) => (scene.rotation.z = Math.sin(state.clock.elapsedTime / 4) / 2))
   return <primitive object={scene} {...props} />
 }

@@ -1,13 +1,14 @@
-import { useLayoutEffect, useEffect, useRef } from 'react'
+import { useLayoutEffect, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useMask, useGLTF, useAnimations, Float, CameraControls, Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial } from '@react-three/drei'
+import { Lightformer, useMask, useGLTF, useAnimations, Float, CameraControls, Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial, OrbitControls } from '@react-three/drei'
+import { easing } from 'maath'
 
 
-export default function MyCanvas() {
+export default function MyCanvas() {  
   return (
     <Canvas shadows camera={{ position: [30, 0, -3], fov: 35, near: 1, far: 50 }}>
       {/* <color attach="background" args={['#c6dde5']} /> */}
-      <Aquarium position={[0, 0.025, 0]}>
+      <Aquarium position={[0, 0.025, 0]} >
         <Float rotationIntensity={1} floatIntensity={1} speed={2}>
           <Tuna position={[0, 0.4, 0]} rotation={[0, Math.PI, 0]} scale={3} />
         </Float>
@@ -27,13 +28,32 @@ export default function MyCanvas() {
           <Lightformer intensity={2} rotation-y={-Math.PI / 2} position={[10, 1, 0]} scale={[50, 2, 1]} />
         </group>
       </Environment> */}
-      <Environment background preset="sunset" blur={0.8} />
-
-      <CameraControls truckSpeed={0} dollySpeed={0} minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
-      {/* <CameraController /> */}
+      <Environment background preset="apartment" blur={0.8} />
+      <CameraController />
     </Canvas>
   )
 }
+
+const degToRad = (degrees) => degrees * (Math.PI / 180);
+
+function CameraController() {
+  const cameraRef = useRef();
+    useFrame((state, delta) => {
+      cameraRef.current.rotate(Math.sin(state.pointer.x/15), -Math.sin(state.pointer.y / 15), true);
+  })
+  return (
+    <CameraControls ref={cameraRef} truckSpeed={0} dollySpeed={0} minPolarAngle={degToRad(30)} maxPolarAngle={degToRad(90)} maxAzimuthAngle={degToRad(160)} minAzimuthAngle={degToRad(20)} />
+  )
+}
+
+// function CameraRig() {
+//   useFrame((state, delta) => {
+//     // easing.damp3(state.camera.position, [-state.pointer.x * 10, state.pointer.y*5 +4, 35], 0.3, delta)
+//     // easing.damp3(ref.current.rotation, [Math.PI / 2, 0, state.clock.elapsedTime / 5 + state.pointer.x], 0.2, delta)
+//       easing.damp3(state.camera.position, [Math.cos(state.pointer.x / 4) * 35, 4 + state.pointer.y * 8, Math.sin(state.pointer.x / 4) * 35], 0.5, delta)      
+//     state.camera.lookAt(0, 0, 0)
+//   })
+// }
 
 function Aquarium({ children, ...props }) {
   const ref = useRef()
@@ -58,7 +78,7 @@ function Aquarium({ children, ...props }) {
           iridescence={1}
           iridescenceIOR={1}
           iridescenceThicknessRange={[0, 1400]}
-          // color={"#d6d14d"}
+          // color={"#e5eb98"}
         />
       </mesh>
       <group ref={ref}>{children}</group>

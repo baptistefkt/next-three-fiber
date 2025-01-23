@@ -1,15 +1,20 @@
-import { useLayoutEffect, useEffect, useRef } from 'react'
+import { useLayoutEffect, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useMask, useGLTF, useAnimations, Float, CameraControls, Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial } from '@react-three/drei'
-
+import { useMask, useGLTF, useAnimations, Float, CameraControls, Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial, PerformanceMonitor, Svg, Text } from '@react-three/drei'
 
 export default function MyCanvas() {
+  const [dpr, setDpr] = useState(1.5)
+
   return (
-    <Canvas shadows camera={{ position: [30, 0, -3], fov: 35, near: 1, far: 50 }}>
+    <Canvas shadows camera={{ position: [30, 0, -3], fov: 35, near: 1, far: 50 }} dpr={dpr}>
+
+      <PerformanceMonitor factor={1} onChange={({ factor }) => setDpr(Math.floor(0.5 + 1.5 * factor, 1))} />
+
+      <Svg src="/fishtank1.svg" scale={0.051} position={[-8, 8, 11]} rotation={[0, Math.PI / 2, 0]} />
 
       <Aquarium position={[0, 0.025, 0]} >
         <Float rotationIntensity={1} floatIntensity={1} speed={2}>
-          <Tuna position={[0, 0.4, 0]} rotation={[0, Math.PI, 0]} scale={3} />
+          <Tuna position={[0, 0.4, 0]} rotation={[0, Math.PI, 0]} scale={2.7} />
         </Float>
       </Aquarium>
 
@@ -32,7 +37,7 @@ const mapPointerY = (pointerY) => {
   if (pointerY <= 0) {
     return 90;
   } else {
-    return 90 + (0 - 90) * pointerY;
+    return 90 + (70 - 90) * pointerY;
   }
 };
 
@@ -41,7 +46,7 @@ function CameraController() {
   const cameraRef = useRef();
 
   useFrame((state) => {
-    const angleX = mapRange(state.pointer.x, -1, 1, 0, 180);
+    const angleX = mapRange(state.pointer.x, -1, 1, 65, 115);
     const angleXInRadians = (angleX * Math.PI) / 180;
 
     const angleYInDegrees = mapPointerY(state.pointer.y);

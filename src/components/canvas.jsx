@@ -1,14 +1,14 @@
-import { useLayoutEffect, useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useMask, useGLTF, useAnimations, Float, CameraControls, Environment, RandomizedLight, AccumulativeShadows, MeshTransmissionMaterial, PerformanceMonitor, Svg, Text } from '@react-three/drei'
 
 export default function MyCanvas() {
-  const [dpr, setDpr] = useState(1.5)
+  // const [dpr, setDpr] = useState(1.5)
 
   return (
-    <Canvas shadows camera={{ position: [30, 0, -3], fov: 35, near: 1, far: 50 }} dpr={dpr}>
+    <Canvas shadows camera={{ position: [30, 0, -3], fov: 35, near: 1, far: 50 }}>
 
-      <PerformanceMonitor factor={1} onChange={({ factor }) => setDpr(Math.floor(0.5 + 1.5 * factor, 1))} />
+      {/* <PerformanceMonitor factor={1} onChange={({ factor }) => setDpr(Math.floor(0.5 + 1.5 * factor, 1))} /> */}
 
       <Svg src="/fishtank1.svg" scale={0.051} position={[-8, 8, 11]} rotation={[0, Math.PI / 2, 0]} />
 
